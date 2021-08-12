@@ -1,0 +1,93 @@
+<deployment-project plugin="plugin.apptool" plugin-version="1.0">
+  <configuration build-checksum="2239743468" file="C:\Users\Jun\ownCloud\Work\Software_Dev\polygonizeebsd\EBSDpolygonizer.prj" location="C:\Users\Jun\ownCloud\Work\Software_Dev\polygonizeebsd" name="EBSDpolygonizer" target="target.mlapps" target-name="Package App">
+    <param.appname>EBSDpolygonizer</param.appname>
+    <param.authnamewatermark>Jun Liu</param.authnamewatermark>
+    <param.email>sam.j.liu@gmail.com</param.email>
+    <param.company>University of Warwick</param.company>
+    <param.icon />
+    <param.icons />
+    <param.summary>EBSD Polygonizer convert raster EBSD data into polygons representing grains to facilitate, e.g.,  Finite Element geometry creation.</param.summary>
+    <param.description>It supports importing EBSD data as text files that can be exported from HKL Channel 5 software packages. The app provides some functions for processing the converted polygons including smoothing and simplifying the grain boundaries by reducing the number of vertices while remaining the grain shape as far as possible.</param.description>
+    <param.screenshot>C:\Users\Jun\AppData\Local\Temp\tp134b27ab_df6b_41dd_bd96_2ed18788df22.png</param.screenshot>
+    <param.version>1.0</param.version>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
+    <param.platforms />
+    <param.output>${PROJECT_ROOT}</param.output>
+    <param.guid>e3057859-b596-4e98-8b08-f106e73f8320</param.guid>
+    <unset>
+      <param.icon />
+      <param.icons />
+      <param.version />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
+      <param.platforms />
+      <param.output />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\EBSDpolygonizer.mlapp</file>
+    </fileset.main>
+    <fileset.depfun>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@grain\grain.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@grain\polygonize.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\addMissingVertices.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\cropmap.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\downsize.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\euler2matrix.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\findEdgeVertices.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\findgbs.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\importCRCfile.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\importebsdmap.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\isInBetween.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\isonboundary.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\map.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\plotgb.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\plotmap.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\plotneighbours.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\plotvertices.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\plotWithGrainLabels.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\removeCollinear.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\removeholes.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\simplify.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\smoothgb.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\@map\trimmap.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\gb.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\gbvc.m</file>
+      <file>C:\Users\Jun\ownCloud\Work\Matlab\+ebsd\pixcell.m</file>
+    </fileset.depfun>
+    <fileset.resources />
+    <fileset.package />
+    <build-deliverables>
+      <file location="C:\Users\Jun\ownCloud\Work\Software_Dev" name="polygonizeebsd" optional="false">C:\Users\Jun\ownCloud\Work\Software_Dev\polygonizeebsd</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2020b</root>
+      <toolboxes>
+        <toolbox name="matlabcoder" />
+      </toolboxes>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
