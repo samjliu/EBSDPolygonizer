@@ -16,11 +16,8 @@ https://git.cardiff.ac.uk/scejl17/ebsd-polygonizer.git
 
 ## Installation
 
-- Detailed steps to set up and install the necessary dependencies for the application.
+- Download and run the MATLAB installer file EBSD Polygonizer.mlappinstall. Alternatively, click on the Install App icon in the toolbar under the APPS ribbon, navigate to the installation file and install. 
 
-## Usage
-
-- Guidance on how to effectively utilize the application, including the data preparation, polygonization, and plotting processes.
 
 ## Documentation
 
