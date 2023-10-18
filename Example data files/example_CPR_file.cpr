@@ -1,0 +1,69 @@
+[General]
+Version=5.0
+Date=25/11/2019
+Time=14:04:49
+Duration=0:52:12
+PerCycle=0.001566103
+Description=Project 1
+Author=AZtec
+Notes=
+JobMode=RegularGrid
+SampleSymmetry=1
+Modified=True
+[Job]
+Coverage=98.3
+Magnification=979
+kV=20.00
+TiltAngle=70.00
+TiltAxis=0.00
+Device=Beam
+GridDistX=0.2000
+GridDistY=0.2000
+xCells=626
+yCells=280
+[Acquisition Surface]
+Euler1=0.0
+Euler2=0.0
+Euler3=0.0
+[Fields]
+Count=9
+Field1=3
+Field2=4
+Field3=5
+Field4=6
+Field5=7
+Field6=8
+Field7=10
+Field8=11
+Field9=12
+[Phases]
+Count=1
+[Phase1]
+StructureName=Iron bcc (old)
+Reference=J. Appl. Phys. [JAPIAU], vol. 42, pages 4290-95
+Enabled=True
+a=2.8660
+b=2.8660
+c=2.8660
+alpha=90.00
+beta=90.00
+gamma=90.00
+LaueGroup=11
+SpaceGroup=229
+ID1=
+ID2=
+[Maximum indices]
+Phase1=444
+[SEMFields]
+DOEuler1=0.142985925743073
+DOEuler2=103.10960427501
+DOEuler3=0.0185905710507562
+[StagePosition]
+XPos=0.96925
+YPos=-28.84617
+ZPos=14.00818
+RPos=-161.114837646484
+TPos=69.9979096333117
+ZValid=True
+[EDX Windows]
+Count=0
