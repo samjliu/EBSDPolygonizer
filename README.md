@@ -7,21 +7,13 @@ EBSDPolygonizer is a MATLAB-based app designed to transform EBSD grain data into
 - **Polygonization**: Transform raster EBSD data into meaningful polygonized data structures.
 - **Plotting**: Plotting capabilities to visualize EBSD maps, neighboring grains, grain boundaries, and vertices.
 
-## Getting Started
-
-1. **Clone the Repository**:
-https://git.cardiff.ac.uk/scejl17/ebsd-polygonizer.git
-
-2. Navigate to the project directory and follow the installation and setup instructions.
-
 ## Installation
 
-- Download and run the MATLAB installer file EBSD Polygonizer.mlappinstall. Alternatively, click on the Install App icon in the toolbar under the APPS ribbon, navigate to the installation file and install. 
-
+- Download and run the MATLAB installer file EBSD Polygonizer.mlappinstall. Alternatively, click on the Install App icon in the toolbar under the APPS ribbon in MATLAB, navigate to the installation file and install. 
 
 ## Documentation
 
-- [Full Documentation](<https://git.cardiff.ac.uk/scejl17/ebsd-polygonizer/-/blob/master/Documentation/EBSDPolygonizer%20User%20Manual.pdf?ref_type=heads>)
+- [Tutorial](<https://git.cardiff.ac.uk/scejl17/ebsd-polygonizer/-/blob/master/Documentation/EBSDPolygonizer%20User%20Manual.pdf?ref_type=heads>)
 
 ## Contributing
 
