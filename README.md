@@ -13,7 +13,7 @@ EBSDPolygonizer is a MATLAB-based app designed to transform EBSD grain data into
 
 ## Documentation
 
-- [Tutorial](<https://git.cardiff.ac.uk/scejl17/ebsd-polygonizer/-/blob/master/Documentation/EBSDPolygonizer%20User%20Manual.pdf?ref_type=heads>)
+- [Tutorial](<Documentation/EBSDPolygonizer User Manual.pdf>)
 
 ## Contributing
 
