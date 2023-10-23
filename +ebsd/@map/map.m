@@ -15,6 +15,9 @@ classdef map<handle
     
     properties
         grains = ebsd.grain.empty      % a vector of grain objects
+        polygons    % an ebsd map including all the grain polygons
+        gbs
+        pixels
         width       % width of the map in um
         height      % height of the map in um
         mapsize     % size including width and height
@@ -26,7 +29,6 @@ classdef map<handle
         aream       % mean area of the grains
         areastd     % standard deviation of the grain area
         areaste     % standard deviation of the grain area
-        polygons    % an ebsd map including all the grain polygons
         verticesbank    % A bank of all the current gbvc vertices
         noholes = false;
         leftedge = 0
@@ -34,11 +36,8 @@ classdef map<handle
         topedge 
         bottomedge = 0
         iscropped = false
-        gbs
         stepsize
         Nvertices
-        
-        pixels
         numXCells  % number of rows of the pixels
         numYCells  % number of columns of the pixels
         ebsdInfoTable  % the table containing EBSD parameters imported from CRC file
