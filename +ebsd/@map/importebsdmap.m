@@ -1,4 +1,4 @@
-function [emap,grains] = importebsdmap(dotsfile, grainfile, crcfile)
+function [emap,grains] = importebsdmap
     % IMPORTEBSDMAP import EBSD data from two input files. 
     % dotsfile --- HKL EBSD data for each pixels and their corresponding grain ID
     % grainfile --- HKL data for each grains
@@ -12,56 +12,85 @@ function [emap,grains] = importebsdmap(dotsfile, grainfile, crcfile)
     % 
     % This function compile a standard workflow to generate a
     % ebsd.map. 
+    typesSupported = {"AztecCrystal", "HKL Channel 5", "Customized"};
+
+    [whichtype,tf] = listdlg("PromptString","Select EBSD data type", 'ListString', typesSupported, 'SelectionMode', 'single', 'ListSize', [150,100]);
+    whattype = typesSupported{whichtype};
+
+    [dotfilename,dotfilepath] = uigetfile('*.txt','Select the exported pixel data file');
+    dotsfile = [dotfilepath, dotfilename];
+    [grfilename,grfilepath] = uigetfile('*.txt','Select the exported grain data file');
+    grainfile = [grfilepath, grfilename];
+    switch whattype
+        case 'AztecCrystal'
+            dots = ebsd.pixcell.importAZTec(dotsfile);
+            disp('PIXCELL data created');
+            grains = ebsd.grain.importAztexGrains(grainfile);
+        case 'HKL Channle 5'
+            dots = ebsd.pixcell.importHKL(dotsfile);
+            disp('PIXCELL data created');
+            grains = ebsd.grain.importHKLgrains(grainfile);
+        case 'Customized'
+            dots = ebsd.pixcell.importCustomized(dotsfile);
+            disp('PIXCELL data created');
+            grains = ebsd.grain.importCustomisedGrains(grainfile);
+    end
+
+    answer = questdlg('Import EBSD parameters from HKL project *.cpr file?', 'EBSD parameters','Yes','No, extract', 'No, input', 'Yes');
+    switch answer
+        case 'Yes'
+            [crcfilename,crcfilepath] = uigetfile('*.cpr', 'Select HKL project file');
+            crcfile = [crcfilepath, crcfilename];
+            ebsdpara = ebsd.map.importCRCfile(crcfile);
+        case 'No, extract'
+            ebsdpara = dots.extractParameters;
+        case 'No, input'
+            opts.Interpreter = 'tex';
+            paraanswer = inputdlg({'Step size (\mum):', 'Number of x steps:', 'Number of y steps:'}, 'EBSD Parameters',[1,30;1,30;1,30], {'0','0','0'}, opts);
+            paras = str2double(paraanswer);
+            if isempty(paraanswer) | all(str2double(paraanswer))
+                % if answer not given or default answer given, issue a
+                % warning
+                error('Invalid parameters or parameters not input...')
+            else
+                ebsdpara.stepsize = paras(1);
+                ebsdpara.xStepSize = ebsdpara.stepsize;
+                ebsdpara.yStepSize = ebsdpara.stepsize;
+                ebsdpara.numXCells = paras(2);
+                ebsdpara.numYCells = paras(3);
+                ebsdpara.allEBSDinfo = [];
+                ebsdpara.CS1toCS0 = [];
+            end
+    end
+    stepsize = ebsdpara.xStepSize;
     
-    if nargin == 0
-        [crcfilename,crcfilepath] = uigetfile('*.cpr', 'Select HKL project file');
-        crcfile = [crcfilepath, crcfilename];
-        [dotfilename,dotfilepath] = uigetfile('*.txt','Select the exported pixel data file');
-        dotsfile = [dotfilepath, dotfilename];
-        [grfilename,grfilepath] = uigetfile('*.txt','Select the exported grain data file');
-        grainfile = [grfilepath, grfilename];
-        whattype = input('Is it an AZtec or HKL file? Type 0 or 1: \n [0] -- AZtec, \n [1] -- HKL \n ');
-        if isempty(whattype)
-            isAztec = true;
-        elseif whattype == 0
-            isAztec = ~whattype;
-        else
-            isAztec = false;
-        end
+    % Now step size is available, flip the map
+    dots = dots.flip(stepsize);
+    switch whattype
+        case 'AztecCrystal'
+            grains = ebsd.grain.importAztexGrains(grainfile);
+        case 'HKL Channle 5'
+            grains = ebsd.grain.importHKLgrains(grainfile,stepsize);
+        case 'Customized'
+            grains = ebsd.grain.importCustomisedGrains(grainfile);
     end
     disp('Please waiting when the EBSDMAP is being created, if you have already EBSDGRAIN data, use ebsdmap(grainobj) to create the map');
-%     h = waitbar(0, msgstart);
-%     disp(['Start creating ebsd.map. ', msgstart]);
-%     if nargin == 3
-%         dots = ebsd.pixcell.importHKL(dotsfile, stepsize);
-%     else
-%         dots = ebsd.pixcell.importHKL(dotsfile);
-%     end
-    ebsdpara = ebsd.map.importCRCfile(crcfile);
-    stepsize = ebsdpara.xStepSize;
-    if isAztec
-        dots = ebsd.pixcell.importAZTec(dotsfile, stepsize);
-    else
-        dots = ebsd.pixcell.importHKL(dotsfile, stepsize);
-    end
-    disp('EBSDDOT data created');
-    if isAztec
-        grains = ebsd.grain.importAztexGrains(grainfile);
-    else
-        grains = ebsd.grain.importHKLgrains(grainfile);
-    end
-    disp('grain data has been imported, assigning EBSDDOT data to each grains...');
+    disp('grain data has been imported, assigning Pixcell data to each grains...');
     grains.claimownership(dots);
-    disp('EBSDDOT data have been assigned to each grains. I am polygonizing grains, which may take a while...');
+    disp('PIXCELL data have been assigned to each grains. I am polygonizing grains, which may take a while...');
     grains.polygonize(dots,ebsdpara);
-    disp('Grains have been polygonized and I am creating EBSDMAP...')
+    disp('Grains have been polygonized and I am creating ebsd.map...')
     emap = ebsd.map(grains);
     emap.pixels = dots;
     emap.stepsize = stepsize;
     emap.numXCells = ebsdpara.numXCells;
     emap.numYCells = ebsdpara.numYCells;
-    emap.ebsdInfoTable = ebsdpara.allEBSDinfo;
-    emap.CS1toCS0 = ebsdpara.CS1toCS0;
+    if isfield(ebsdpara, 'allEBSDinfo')
+        emap.ebsdInfoTable = ebsdpara.allEBSDinfo;
+    end
+    if isfield(ebsdpara,'CS1toCS0')
+        emap.CS1toCS0 = ebsdpara.CS1toCS0;
+    end
     disp('EBSD map created. I am checking the neighbours of each grains...');
 %     d = input('What is the buffersize for checking neighbours [default=0.1*stepsize]: ');
 %     if isempty(d)

@@ -19,6 +19,11 @@ classdef pixcell
         isatedge    % Boolean, is it on the edge of a scan?
         isIndexed   % Boolean, is it indexed?
         stepsize    % stepsize should be given separately in micron
+        % numXCells
+        % numYCells
+        % xStepSize
+        % yStepSize
+        % CS1toCS0
 %         btx         % x coordinate of the bottom right corner of the polygon 
 %         bry         % y coordinate of the bottom right corner of the polygon 
 %         blx         % x coordinate of the bottom left corner of the polygon 
@@ -29,7 +34,7 @@ classdef pixcell
     end
     
     methods
-        function ed = pixcell(varargin)                
+        function pxc = pixcell(varargin)                
         end
         
         function ed = crop(ed,inds)
@@ -114,10 +119,38 @@ classdef pixcell
             X = num2cell(xdata,2);
             Y = num2cell(ydata,2);
         end
+
+        function para = extractParameters(pxc)
+            % Extract required parameters including step size, number of x
+            % cells, number of y cells
+            uniqx = unique(pxc.x);
+            uniqy = unique(pxc.y);
+            para.numXCells = length(uniqx);
+            para.numYCells = length(uniqy);
+            diffx = diff(uniqx);
+            diffy = diff(uniqy);
+            if length(unique(diffx))>1
+                warning('x step size is not unique. The maximum value was chosen.')
+            end
+            if length(unique(diffy))>1
+                warning('y step size is not unique. The maximum value was chosen.')
+            end
+            para.xStepSize = max(unique(diffx));
+            para.yStepSize = max(unique(diffy));
+            para.stepsize = para.xStepSize;
+            para.CS1toCS0 = [];
+        end
+
+        function pxc = flip(pxc,stepsize)
+            % transform y coordinates so that it looks similar as IPF 
+            pxc.stepsize = stepsize;
+            pxc.y = max(pxc.y)+stepsize-pxc.y;
+        end
+        
     end
     
     methods(Static)
-        function pxc = importHKL(datafile,stepsize)
+        function pxc = importHKL(datafile)
             % Import the EBSD data file exported from Tango of HKL Channel
             % software package. See ebsd.map for how to export the text
             % data file
@@ -149,6 +182,10 @@ classdef pixcell
             pxc.bandcontr = dataArray{:,10};
             pxc.bs = dataArray{:,11};
             pxc.grainID = dataArray{:,12};
+            % if nargin < 2
+            %     para = pxc.extraParameters;
+            %     stepsize = para.stepsize;
+            % end
 %             if nargin < 2  % if step size is not given, determine it from the imported data
 %                 ux = unique(ed.x);
 %                 uy = unique(ed.y);
@@ -175,12 +212,12 @@ classdef pixcell
 %                     end                   
 %                 end
 %             end
-            pxc.stepsize = stepsize;
-            pxc.y = max(pxc.y)+stepsize-pxc.y;
+            % pxc.stepsize = stepsize;
+            % pxc.y = max(pxc.y)+stepsize-pxc.y;
             fclose(fileID); 
         end
 
-        function pxc = importAZTec(datafile,stepsize)
+        function pxc = importAZTec(datafile)
             % Import the EBSD data file exported from Tango of HKL Channel
             % software package. See ebsd.map for how to export the text
             % data file
@@ -192,7 +229,7 @@ classdef pixcell
             if nargin < 1
                 [filename,filepath] = uigetfile('*.txt','Select the pixel data file:');
                 datafile = [filepath, filename];
-                stepsize = input('Step size is [micron]: ');
+                % stepsize = input('Step size is [micron]: ');
             end
 %             fileID = fopen(datafile,'r');
             startRow = 3;
@@ -219,38 +256,16 @@ classdef pixcell
             pxc.x = dataArray.X;
             pxc.y = dataArray.Y;
             pxc.grainID = dataArray.GrainID;
-%             if nargin < 2  % if step size is not given, determine it from the imported data
-%                 ux = unique(ed.x);
-%                 uy = unique(ed.y);
-%                 uxdif = diff(ux);
-%                 uydif = diff(uy);
-%                 [xsteps, inxsteps, induxdif] = unique(uxdif);
-%                 [ysteps, inysteps, induydif]  = unique(uydif);
-%                 
-%                 xstep = min(unique(uxdif));
-%                 ystep = min(unique(uydif));
-%                 if xstep == ystep && xstep ~= 0
-%                     stepsize = xstep;
-%                 else
-%                     % If the step size cannot be determined from the data,
-%                     % The user is asked to input it (in micron)
-%                     % If no input is returned, step size is set to 10.
-%                     xsteps
-%                     ysteps
-%                     step = input('I cannot determine what the step size is, please tell me... [micron]: ');
-%                     if ~isempty(step)
-%                        stepsize = step;
-%                     else
-%                        error('Step size is not given!');
-%                     end                   
-%                 end
-%             end
-            pxc.stepsize = stepsize;
-            pxc.y = max(pxc.y)+stepsize-pxc.y;
+            % if nargin < 2
+            %     para = pxc.extraParameters;
+            %     stepsize = para.stepsize;
+            % end
+            % pxc.stepsize = stepsize;
+            % pxc.y = max(pxc.y)+stepsize-pxc.y;
 %             fclose(fileID); 
         end
 
-        function pxc = importCustomized(pixeldatafile,stepsize)
+        function pxc = importCustomized(pixeldatafile)
             % Import customised EBSD data
             % The required data include
                 % All pixels at least containing
@@ -275,8 +290,8 @@ classdef pixcell
                 [filename,filepath] = uigetfile('*.txt','Select the customised pixel data file:');
                 pixeldatafile = [filepath, filename];
                 options.Interpreter = 'tex';
-                stepsizeanswer = inputdlg('Enter step size \mum:','Step size',[1,30], {''}, options);
-                stepsize = str2double(stepsizeanswer);
+                % stepsizeanswer = inputdlg('Enter step size \mum:','Step size',[1,30], {''}, options);
+                % stepsize = str2double(stepsizeanswer);
             end
                     %% Set up the Import Options and import the data
             opts = delimitedTextImportOptions("NumVariables", 4);
@@ -300,7 +315,7 @@ classdef pixcell
             pxc.x = pixeltable.X;
             pxc.y = pixeltable.Y;
             pxc.grainID = pixeltable.GrainID;
-            pxc.stepsize = stepsize;
+            % pxc.stepsize = stepsize;
         end
     end
 end
