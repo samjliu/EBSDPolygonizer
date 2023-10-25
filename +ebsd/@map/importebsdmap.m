@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 function [emap,grains] = importebsdmap
+=======
+function [emap,grains] = importebsdmap(dotsfile, grainfile, crcfile)
+>>>>>>> 5eec6960b06bb6b3768e8d9e84668357651cc221
     % IMPORTEBSDMAP import EBSD data from two input files. 
     % dotsfile --- HKL EBSD data for each pixels and their corresponding grain ID
     % grainfile --- HKL data for each grains
@@ -12,6 +16,7 @@ function [emap,grains] = importebsdmap
     % 
     % This function compile a standard workflow to generate a
     % ebsd.map. 
+<<<<<<< HEAD
     typesSupported = {"AztecCrystal", "HKL Channel 5", "Customized"};
 
     [whichtype,tf] = listdlg("PromptString","Select EBSD data type", 'ListString', typesSupported, 'SelectionMode', 'single', 'ListSize', [150,100]);
@@ -80,17 +85,67 @@ function [emap,grains] = importebsdmap
     disp('PIXCELL data have been assigned to each grains. I am polygonizing grains, which may take a while...');
     grains.polygonize(dots,ebsdpara);
     disp('Grains have been polygonized and I am creating ebsd.map...')
+=======
+    
+    if nargin == 0
+        [crcfilename,crcfilepath] = uigetfile('*.cpr', 'Select HKL project file');
+        crcfile = [crcfilepath, crcfilename];
+        [dotfilename,dotfilepath] = uigetfile('*.txt','Select the exported pixel data file');
+        dotsfile = [dotfilepath, dotfilename];
+        [grfilename,grfilepath] = uigetfile('*.txt','Select the exported grain data file');
+        grainfile = [grfilepath, grfilename];
+        whattype = input('Is it an AZtec or HKL file? Type 0 or 1: \n [0] -- AZtec, \n [1] -- HKL \n ');
+        if isempty(whattype)
+            isAztec = true;
+        elseif whattype == 0
+            isAztec = ~whattype;
+        else
+            isAztec = false;
+        end
+    end
+    disp('Please waiting when the EBSDMAP is being created, if you have already EBSDGRAIN data, use ebsdmap(grainobj) to create the map');
+%     h = waitbar(0, msgstart);
+%     disp(['Start creating ebsd.map. ', msgstart]);
+%     if nargin == 3
+%         dots = ebsd.pixcell.importHKL(dotsfile, stepsize);
+%     else
+%         dots = ebsd.pixcell.importHKL(dotsfile);
+%     end
+    ebsdpara = ebsd.map.importCRCfile(crcfile);
+    stepsize = ebsdpara.xStepSize;
+    if isAztec
+        dots = ebsd.pixcell.importAZTec(dotsfile, stepsize);
+    else
+        dots = ebsd.pixcell.importHKL(dotsfile, stepsize);
+    end
+    disp('EBSDDOT data created');
+    if isAztec
+        grains = ebsd.grain.importAztexGrains(grainfile);
+    else
+        grains = ebsd.grain.importHKLgrains(grainfile);
+    end
+    disp('grain data has been imported, assigning EBSDDOT data to each grains...');
+    grains.claimownership(dots);
+    disp('EBSDDOT data have been assigned to each grains. I am polygonizing grains, which may take a while...');
+    grains.polygonize(dots,ebsdpara);
+    disp('Grains have been polygonized and I am creating EBSDMAP...')
+>>>>>>> 5eec6960b06bb6b3768e8d9e84668357651cc221
     emap = ebsd.map(grains);
     emap.pixels = dots;
     emap.stepsize = stepsize;
     emap.numXCells = ebsdpara.numXCells;
     emap.numYCells = ebsdpara.numYCells;
+<<<<<<< HEAD
     if isfield(ebsdpara, 'allEBSDinfo')
         emap.ebsdInfoTable = ebsdpara.allEBSDinfo;
     end
     if isfield(ebsdpara,'CS1toCS0')
         emap.CS1toCS0 = ebsdpara.CS1toCS0;
     end
+=======
+    emap.ebsdInfoTable = ebsdpara.allEBSDinfo;
+    emap.CS1toCS0 = ebsdpara.CS1toCS0;
+>>>>>>> 5eec6960b06bb6b3768e8d9e84668357651cc221
     disp('EBSD map created. I am checking the neighbours of each grains...');
 %     d = input('What is the buffersize for checking neighbours [default=0.1*stepsize]: ');
 %     if isempty(d)
