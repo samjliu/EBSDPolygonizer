@@ -50,6 +50,11 @@ data.numYCells = str2double(datatable(datatable.Parameters=="yCells",2).Values);
 data.xStepSize = str2double(datatable(datatable.Parameters=="GridDistX",2).Values);
 data.yStepSize = str2double(datatable(datatable.Parameters=="GridDistY",2).Values);
 data.stepsize = str2double(datatable(datatable.Parameters=="GridDist",2).Values);
+if isempty(data.stepsize) & ~isempty(data.xStepSize)
+    data.stepsize = data.xStepSize;
+else
+    warning('Step size was not found.')
+end
 euler1 = str2double(datatable(datatable.Parameters=="Euler1",2).Values);
 euler2 = str2double(datatable(datatable.Parameters=="Euler2",2).Values);
 euler3 = str2double(datatable(datatable.Parameters=="Euler3",2).Values);
